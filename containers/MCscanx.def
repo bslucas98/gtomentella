@@ -1,0 +1,24 @@
+##to run, use "singularity exec mcscanx.sif MCScanX"
+
+Bootstrap: docker
+From: ylock/mcscanx:v1.0
+
+%labels
+    MAINTAINER Lucas Borges
+
+%post
+    cd /usr/local/
+    cd MCScanX/
+    mkdir bin
+    mv MCScanX bin/
+    mv MCScanX_h bin/
+    mv duplicate_gene_classifier bin/
+    cd ../
+
+%environment
+    export PATH=/usr/local/MCScanX/bin:$PATH
+
+%runscript
+    MCScanX
+
+

@@ -1,0 +1,28 @@
+## this script must be run outside BIOCLUSTER
+
+Bootstrap: docker
+From: ubuntu:22.04
+
+%labels
+    MAINTAINER Lucas Borges
+
+%post
+    ##Update system
+    apt-get update -y
+    apt-get install wget make libz-dev g++ -y
+    chmod 755 /root
+
+    ##Get latest STAR source from releases
+    cd
+    wget https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz
+    tar -xzf 2.7.10a.tar.gz
+    cd STAR-2.7.10a/source
+    make STAR
+
+%environment
+    export PATH=/root/STAR-2.7.10a/bin/Linux_x86_64:$PATH
+
+%runscript
+    STAR
+
+

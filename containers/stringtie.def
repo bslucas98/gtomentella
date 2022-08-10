@@ -1,0 +1,50 @@
+## this script must be run outside BIOCLUSTER
+
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+    StringTie v.2.2.1 - created by Lucas Borges
+
+%post
+    ##Update system
+    apt-get update -y
+    apt-get upgrade -y
+    apt-get install wget git build-essential -y
+    #libraries for HTSlib
+    #apt-get install bzip2 zlib1g libbz2-dev liblzma-dev libcurl4-openssl-dev libssl-dev -y
+    apt-get install bzip2 autoconf automake make gcc perl zlib1g-dev libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev libdeflate-dev -y
+    apt-get install tabix -y
+    apt-get install tabix -y
+    chmod 755 /root
+    cd
+
+    ##Instal HTSlib
+    wget https://github.com/samtools/htslib/releases/download/1.15.1/htslib-1.15.1.tar.bz2
+    tar -xvf htslib-1.15.1.tar.bz2 
+    cd htslib-1.15.1
+    make
+    make install
+    cd
+
+    ##Get StringTie from source
+    wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-2.2.1.tar.gz
+    tar -xzf stringtie-2.2.1.tar.gz
+    cd stringtie-2.2.1
+    mkdir -p ./htslib/xlibs/lib/
+    ## copy some libs to stringtie source dir
+    cp /usr/local/lib/libhts.a ~/stringtie-2.2.1/htslib/
+    cp /usr/lib/x86_64-linux-gnu/libbz2.a ~/stringtie-2.2.1/htslib/xlibs/lib/
+    cp /usr/lib/x86_64-linux-gnu/liblzma.a ~/stringtie-2.2.1/htslib/xlibs/lib/
+    make release
+
+    ##Download test data
+    wget https://github.com/gpertea/stringtie/raw/test_data/tests.tar.gz
+    make test
+
+%environment
+    export PATH=/root/stringtie-2.2.1/:$PATH
+    #ln -s /programa3/bin/outrobinario /usr/bin/outrobinario
+
+%runscript
+    stringtie --help

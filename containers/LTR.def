@@ -1,0 +1,24 @@
+## this script must be run outside BIOCLUSTER
+
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+    LTR detection tools - created by Lucas Borges
+
+%post
+    ##Update system
+    apt-get update -y
+    apt-get upgrade -y
+    apt-get install wget git -y
+    apt-get install zlib1g-dev libbz2-dev liblua5.1-0-dev lua-filesystem-dev lua-lpeg-dev lua-md5-dev libexpat1-dev libtre-dev libcairo2-dev libpango1.0-dev libsqlite3-dev libbam-dev -y
+
+    cd usr/
+    git clone https://github.com/oushujun/LTR_FINDER_parallel.git
+    wget http://genometools.org/pub/binary_distributions/gt-1.6.2-Linux_x86_64-64bit-complete.tar.gz
+    tar -xvf gt-1.6.2-Linux_x86_64-64bit-complete.tar.gz 
+
+%environment
+    export PATH=/usr/LTR_FINDER_parallel/:$PATH
+    export PATH=/usr/gt-1.6.2-Linux_x86_64-64bit-complete/bin/:$PATH
+

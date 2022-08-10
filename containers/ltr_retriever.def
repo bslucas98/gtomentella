@@ -1,0 +1,4 @@
+singularity build ltr_retriever2.sif docker-daemon://arnstrm2/ltr_retriever:latest
+
+#to execute, run:
+singularity run ltr_retriever2.sif /LTR_retriever/LTR_retriever -h

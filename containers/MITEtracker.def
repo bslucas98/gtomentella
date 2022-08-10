@@ -1,0 +1,36 @@
+## this script must be run outside BIOCLUSTER
+
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+    LTR detection tools - created by Lucas Borges
+
+%post
+    ##Update system
+    apt-get update -y
+    apt-get upgrade -y
+    apt-get install wget git -y
+    apt-get install ncbi-blast+ virtualenv -y
+    apt-get install autoconf -y
+    apt-get install python3.8-dev python3-pip -y
+
+    cd usr/
+    git clone https://github.com/INTABiotechMJ/MITE-Tracker.git
+    cd MITE-Tracker
+
+    ##vsearch
+    wget https://github.com/torognes/vsearch/archive/v2.7.1.tar.gz
+    tar xzf v2.7.1.tar.gz
+    cd vsearch-2.7.1
+    sh autogen.sh
+    ./configure
+    make
+
+    ##python dependencies
+    python3.8 -m pip install cython
+    cd ..
+    cat requirements.txt | sed "s/0.19.0/1.2.4/" | sed "s/1.9.1/1.20.3/" > requirements_mod.txt
+    python3.8 -m pip install -r requirements_mod.txt
+
+#to run, use: python3.8 /usr/MITE-Tracker/MITETracker.py
